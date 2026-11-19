@@ -136,7 +136,7 @@ library(pairwiseAdonis)
 library(cowplot)
 library(ggvenn)
 file_path <-"C:/Users/xuzy0/Desktop/xzy/split/feature_table.txt"
-setwd("C:/Users/xuzy0/Desktop/ITS\u5206\u6790\u56fe")
+setwd("C:/Users/xuzy0/Desktop/ITS")
 feature_table <- read.delim("C:/Users/xuzy0/Desktop/xzy/split/feature_table.txt", row.names = 1)
 asv <- feature_table[,8:107]
 rarecurve(t(asv), step = 5000,col = "blue", cex = 0.6)
@@ -153,10 +153,10 @@ for (i in seq(0,sum(feature_table$A859.Jul),5000)) {
 }
 rarefaction_curve <- data.frame(sequence_depth,asv_number,sample)
 rarefaction_curve$period <- ""
-rarefaction_curve$period[grep("D",rarefaction_curve$sample)] <- "Spring"
-rarefaction_curve$period[grep("A",rarefaction_curve$sample)] <- "Summer"
-rarefaction_curve$period[grep("B",rarefaction_curve$sample)] <- "Autumn"
-rarefaction_curve$period[grep("C",rarefaction_curve$sample)] <- "Winter"
+rarefaction_curve$period[grep("^D",rarefaction_curve$sample)] <- "Spring"
+rarefaction_curve$period[grep("^A",rarefaction_curve$sample)] <- "Summer"
+rarefaction_curve$period[grep("^B",rarefaction_curve$sample)] <- "Autumn"
+rarefaction_curve$period[grep("^C",rarefaction_curve$sample)] <- "Winter"
 p1 <- ggplot(rarefaction_curve,aes(sequence_depth,asv_number,fill=sample,color=period)) + geom_line()+
   scale_color_manual(values = c("#80cba4","#fbda83","#e69a9b","#4965b0"))+
   theme(panel.background = element_blank(),
@@ -950,18 +950,7 @@ p2 <- ggplot(pathgen,aes(Seasons,Relative_abundace,fill=Seasons))+
 p2
 dunnTest(as.numeric(Relative_abundace)~Seasons,pathgen,method="bh")
 plot_grid(p1,p2)
-ggsave("D:/Desktop/seq/ITS/\u62bd\u5e73/venn+guild.pdf",width = 8,height = 6)
-data <- read.csv("D:/Desktop/seq/ITS/\u62bd\u5e73/MEAN/Mar_node_attribute_for_Gephi].csv",sep = "\t")
-phylum <- read.delim("D:/Desktop/seq/ITS/\u62bd\u5e73/feature_table.txt")
-data <- cbind(data,phylum[data$ID,2])
-colnames(data)[12] <- "phylum"
-data$phylum[is.na(data$phylum)] <- "Others"
-for (i in 1:nrow(data)) {
-  if (data$phylum[i] != "p__Ascomycota" & data$phylum[i] != "p__Basidiomycota"){
-    data$phylum[i] <- "Others"
-  }
-}
-write.csv(data,"D:/Desktop/seq/ITS/\u62bd\u5e73/MEAN/Mar_node.csv",row.names = F,quote = F)
+ggsave("D:/Desktop/seq/ITS/venn+guild.pdf",width = 8,height = 6)
 install.packages("microeco")
 library(microeco)
 library(tidytree)
@@ -1061,7 +1050,7 @@ dunnTest(as.numeric(f__Mrakiaceae)~months,data,method="bh")
 dunnTest(as.numeric(f__Bulleribasidiaceae)~months,data,method="bh")
 dunnTest(as.numeric(f__Nectriaceae)~months,data,method="bh")
 plot_grid(p1,p2,p3,p4,p5,rows = 1,align = "hv")
-data <- read.delim("D:/Desktop/seq/ITS/\u62bd\u5e73/feature_table.txt",row.names = 1)
+data <- read.delim("D:/Desktop/seq/ITS/feature_table.txt",row.names = 1)
 data[,8:47] <- sweep(data[,8:47],2,colSums(data[,8:47]),"/")
 data <- data[order(rowSums(data[,8:47]),decreasing = T),]
 write.csv(data,"D:/Desktop/feature_relative.csv",row.names = T)
